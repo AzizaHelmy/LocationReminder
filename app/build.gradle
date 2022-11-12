@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -16,7 +20,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        dataBinding true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -38,9 +44,23 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    // Room components
+    implementation "androidx.room:room-runtime:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    // Koin Core features
+    implementation "io.insert-koin:koin-core:3.2.2"
+    // Koin Test features
+    testImplementation "io.insert-koin:koin-test:3.2.2"
+    //firebase UI
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
 
 
 }
