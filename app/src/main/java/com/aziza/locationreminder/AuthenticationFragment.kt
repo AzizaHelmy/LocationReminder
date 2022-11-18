@@ -16,8 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 
 class AuthenticationFragment : Fragment() {
     private lateinit var binding: FragmentAuthenticationBinding
-    private lateinit var auth: FirebaseAuth
-
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { result: FirebaseAuthUIAuthenticationResult? ->
@@ -25,7 +23,8 @@ class AuthenticationFragment : Fragment() {
     }
 
     private fun handelAuthResponse(result: FirebaseAuthUIAuthenticationResult?) {
-        Toast.makeText(requireContext(), "result${result?.idpResponse}", Toast.LENGTH_SHORT).show()
+        //how to check if it successfully?
+        Toast.makeText(requireContext(), "result${result?.resultCode}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(
@@ -39,23 +38,12 @@ class AuthenticationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnLogin.setOnClickListener {
-            auth = FirebaseAuth.getInstance()
-            if (auth.currentUser != null) {
+            if (FirebaseAuth.getInstance().currentUser != null) {
                 // already signed in
                 findNavController().navigate(R.id.reminderListFragment)
             } else {
                 launchSignInFlow()
             }
-
-//          startActivityForResult(
-//                AuthUI.getInstance()
-//                    .createSignInIntentBuilder()
-//                    .setAvailableProviders(providers)
-//                    .setTheme(R.style.Theme_LocationReminder)
-//                    .setLogo(R.drawable.map)
-//                    .build(),
-//                RC_SIGN_IN
-//            )
         }
     }
 
