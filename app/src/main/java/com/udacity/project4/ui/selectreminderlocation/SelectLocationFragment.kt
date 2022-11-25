@@ -53,6 +53,7 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
                 requireContext(), "Location Permission Denied", Toast.LENGTH_SHORT
             ).show()
         }
+    @SuppressLint("SuspiciousIndentation")
     private val locationSettingReqLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if(result.resultCode== Activity.RESULT_OK){
