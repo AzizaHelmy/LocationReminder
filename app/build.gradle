@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace 'com.aziza.locationreminder'
+    namespace 'com.udacity.project4'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.aziza.locationreminder"
+        applicationId "com.udacity.project4"
         minSdk 21
         targetSdk 32
         versionCode 1
@@ -47,11 +47,14 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    //Maps & Location
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     // Room components
     implementation "androidx.room:room-runtime:2.4.3"
     kapt "androidx.room:room-compiler:2.4.3"
@@ -65,6 +68,7 @@ dependencies {
     testImplementation "io.insert-koin:koin-test:3.2.2"
     //FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
-
+    // lottie
+    implementation "com.airbnb.android:lottie:3.6.1"
 
 }

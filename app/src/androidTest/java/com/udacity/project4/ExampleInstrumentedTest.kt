@@ -1,4 +1,4 @@
-package com.aziza.locationreminder
+package com.udacity.project4
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

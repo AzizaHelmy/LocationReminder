@@ -1,4 +1,4 @@
-package com.aziza.locationreminder
+package com.udacity.project4
 
 import org.junit.Test
 

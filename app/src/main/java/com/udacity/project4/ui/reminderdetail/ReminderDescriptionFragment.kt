@@ -1,12 +1,14 @@
-package com.aziza.locationreminder
+package com.udacity.project4.ui.reminderdetail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.udacity.project4.R
 
-class SaveReminderFragment : Fragment() {
+
+class ReminderDescriptionFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +20,7 @@ class SaveReminderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_save_reminder, container, false)
+        return inflater.inflate(R.layout.fragment_reminder_description, container, false)
     }
-
 
 }

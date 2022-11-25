@@ -11,10 +11,10 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/reminderCardView"
         android:layout_width="match_parent"
+        app:cardElevation="@dimen/margin_normal"
+        app:cardCornerRadius="@dimen/margin_normal"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_medium"
-
-        >
+        android:layout_margin="@dimen/padding_medium">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,11 +22,11 @@
             android:padding="@dimen/padding_medium">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/tv_title"
+                android:padding="@dimen/padding_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_small"
-                android:layout_marginLeft="@dimen/padding_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_normal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,23 +34,24 @@
                 tools:text="Title" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/tv_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_small"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="@id/tv_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
                 tools:text="Description" />
 
             <TextView
+                android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small"
-                app:layout_constraintBottom_toBottomOf="@+id/description"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/title"
+                app:layout_constraintTop_toTopOf="@+id/tv_title"
                 tools:text="Location" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

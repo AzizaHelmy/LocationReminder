@@ -1,4 +1,4 @@
-package com.aziza.locationreminder
+package com.udacity.project4.ui.reminderlist
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,12 +8,19 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.aziza.locationreminder.databinding.FragmentReminderListBinding
 import com.firebase.ui.auth.AuthUI
+import com.udacity.project4.R
+import com.udacity.project4.databinding.FragmentReminderListBinding
+
 
 class ReminderListFragment : Fragment() {
     private lateinit var binding: FragmentReminderListBinding
     private lateinit var dialog: AlertDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,8 +31,11 @@ class ReminderListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.fabAddReminder.setOnClickListener {
+            findNavController().navigate(R.id.addReminderFragment)
+        }
+
         setupMenu()
-        showAlertDialog()
     }
 
     private fun setupMenu() {
@@ -39,10 +49,8 @@ class ReminderListFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                AuthUI.getInstance().signOut(requireContext()).addOnSuccessListener {
-                    findNavController().navigate(R.id.authenticationFragment)
-                }
-                //showAlertDialog()
+                showAlertDialog()
+
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -50,15 +58,17 @@ class ReminderListFragment : Fragment() {
 
     private fun showAlertDialog() {
         dialog = AlertDialog.Builder(requireContext()).apply {
-            setIcon(R.drawable.ic_logout)
-            setMessage("Logout?")
-            setTitle("Confirm")
+            setIcon(R.drawable.attention)
+            setTitle("Warning!")
+            setMessage("Are you sure you want to logout?")
             setNegativeButton("Cancel") { dialog, _ ->
                 dialog.cancel()
             }
-            setNegativeButton("Yes") { _, _ ->
-                findNavController().navigate(R.id.authenticationFragment)
+            setPositiveButton("Yes") { _, _ ->
+                AuthUI.getInstance().signOut(requireContext()).addOnSuccessListener {
+                    findNavController().navigate(R.id.authenticationFragment)
+                }
             }
-        }.create()
+        }.show()
     }
 }
