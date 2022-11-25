@@ -11,12 +11,13 @@ import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
 import com.udacity.project4.databinding.FragmentReminderListBinding
+import com.udacity.project4.utils.setup
 
 
 class ReminderListFragment : Fragment() {
     private lateinit var binding: FragmentReminderListBinding
     private lateinit var dialog: AlertDialog
-
+    //override val _viewModel: RemindersListViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -31,13 +32,20 @@ class ReminderListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
         binding.fabAddReminder.setOnClickListener {
             findNavController().navigate(R.id.addReminderFragment)
         }
 
         setupMenu()
     }
+    private fun setupRecyclerView() {
+        val adapter = RemindersListAdapter {
+        }
 
+//        setup the recycler view using the extension function
+        binding.reminderssRecyclerView.setup(adapter)
+    }
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {

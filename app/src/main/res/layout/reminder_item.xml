@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-    </data>
+        <variable
+            name="item"
+            type="com.udacity.project4.ui.reminderlist.ReminderDataItem" />    </data>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/reminderCardView"
