@@ -19,14 +19,14 @@
     </fragment>
     <fragment
         android:id="@+id/selectLocationFragment"
-        android:name="com.udacity.project4.ui.selectreminderlocation.SelectLocationFragment"
+        android:name="com.udacity.project4.ui.savereminder.selectreminderlocation.SelectLocationFragment"
         android:label="Select Location"
         tools:layout="@layout/fragment_select_location" />
     <fragment
         android:id="@+id/addReminderFragment"
-        android:name="com.udacity.project4.ui.addreminder.AddReminderFragment"
+        android:name="com.udacity.project4.ui.savereminder.SaveReminderFragment"
         android:label="Add Reminder"
-        tools:layout="@layout/fragment_add_reminder" >
+        tools:layout="@layout/fragment_save_reminder" >
         <action
             android:id="@+id/action_saveReminderFragment_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment" />

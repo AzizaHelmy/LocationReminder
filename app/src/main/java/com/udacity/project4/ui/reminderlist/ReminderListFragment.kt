@@ -10,14 +10,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
+import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentReminderListBinding
 import com.udacity.project4.utils.setup
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ReminderListFragment : Fragment() {
+class ReminderListFragment : BaseFragment() {
     private lateinit var binding: FragmentReminderListBinding
     private lateinit var dialog: AlertDialog
-    //override val _viewModel: RemindersListViewModel by viewModel()
+    override val _viewModel: RemindersListViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

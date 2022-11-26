@@ -38,7 +38,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <receiver
-            android:name=".ui.addreminder.geofence.GeofenceBroadcastReceiver"
+            android:name=".ui.savereminder.geofence.GeofenceBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.ACCESS_BACKGROUND_LOCATION" />
         <activity

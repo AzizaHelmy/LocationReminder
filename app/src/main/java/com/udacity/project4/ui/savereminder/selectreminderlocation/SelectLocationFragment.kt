@@ -1,4 +1,4 @@
-package com.udacity.project4.ui.selectreminderlocation
+package com.udacity.project4.ui.savereminder.selectreminderlocation
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,18 +7,13 @@ import android.app.AlertDialog
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
@@ -30,54 +25,50 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
+import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
+import com.udacity.project4.ui.savereminder.SaveReminderViewModel
+import com.udacity.project4.utils.isDeviceLocationEnabled
+import org.koin.android.ext.android.inject
 import java.util.*
 
-class SelectLocationFragment : Fragment(), OnMapReadyCallback {
+class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: FragmentSelectLocationBinding
-
+    override val _viewModel: SaveReminderViewModel by inject()
     private val locationRequest =
         LocationRequest.Builder(10000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
     )
-    private val locationPermissionResult =
+    private val locationPermissionResultRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true || result[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
-                Toast.makeText(
-                    requireContext(), "Location Permission granted", Toast.LENGTH_SHORT
-                ).show()
+                _viewModel.showToast.value = getString(R.string.location_permission_granted)
                 getMyCurrentLocation()
-            } else Toast.makeText(
-                requireContext(), "Location Permission Denied", Toast.LENGTH_SHORT
-            ).show()
+            } else
+                _viewModel.showSnackBarInt.value = R.string.location_permission_denied
+
         }
+
     @SuppressLint("SuspiciousIndentation")
-    private val locationSettingReqLauncher =
+    private val locationSettingPermissionResultRequest =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if(result.resultCode== Activity.RESULT_OK){
-                Toast.makeText(
-                    requireContext(), "Accept to open location", Toast.LENGTH_SHORT
-                ).show()
+            if (result.resultCode == Activity.RESULT_OK) {
                 getMyCurrentLocation()
-            }else
-            Toast.makeText(
-                requireContext(), "Denied to open location", Toast.LENGTH_SHORT
-            ).show()
+            } else
+                _viewModel.showErrorMessage.value =
+                    getString(R.string.deny_to_open_location)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissions += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        }
         if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) || shouldShowRequestPermissionRationale(
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         ) { // if true = user denied the request 2 times
-            showAlertDialogForPermission()
+            showAlertDialogForLocationPermission()
 
         }
     }
@@ -100,17 +91,16 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showAlertDialogForPermission() {
+    private fun showAlertDialogForLocationPermission() {
         AlertDialog.Builder(requireContext()).apply {
             setIcon(R.drawable.attention)
             setTitle(getString(R.string.location_required_error))
             setMessage(getString(R.string.permission_denied_explanation))
             setPositiveButton("OK") { _, _ ->
-                locationPermissionResult.launch(permissions)
+                locationPermissionResultRequest.launch(permissions)
             }
         }.show()
     }
-
 
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
@@ -145,17 +135,17 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
-            if (isLocationEnabled()) {
+            if (isDeviceLocationEnabled()) {
                 getMyCurrentLocation()
             } else {
-                enableLocation()
+                enableDeviceLocation()
             }
         } else {
-            locationPermissionResult.launch(permissions)
+            locationPermissionResultRequest.launch(permissions)
         }
     }
 
-    private fun enableLocation() {
+    private fun enableDeviceLocation() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(requireActivity())
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
@@ -163,7 +153,7 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
             // All location settings are satisfied. The client can initialize
             // location requests here.
             // ...
-           // getMyCurrentLocation()
+            // getMyCurrentLocation()
         }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
@@ -172,7 +162,7 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
                 try {
                     // Show the dialog by calling startResolutionForResult(),
                     // and check the result in onActivityResult().
-                    locationSettingReqLauncher.launch(
+                    locationSettingPermissionResultRequest.launch(
                         IntentSenderRequest.Builder(exception.resolution.intentSender).build()
                     )
                 } catch (sendEx: IntentSender.SendIntentException) {
@@ -180,7 +170,6 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -231,13 +220,6 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
         ) == PackageManager.PERMISSION_GRANTED)
     }
 
-    private fun isLocationEnabled(): Boolean {
-        val locationManager =
-            context?.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
 
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
@@ -261,3 +243,4 @@ class SelectLocationFragment : Fragment(), OnMapReadyCallback {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 }
+

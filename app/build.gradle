@@ -6,7 +6,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id ''
+
 }
 
 android {
@@ -63,8 +63,8 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    // Koin Core features
-    implementation "io.insert-koin:koin-core:3.2.2"
+    // Koin main features for Android
+    implementation "io.insert-koin:koin-android:3.2.2"
     // Koin Test features
     testImplementation "io.insert-koin:koin-test:3.2.2"
     //FirebaseUI for Firebase Auth

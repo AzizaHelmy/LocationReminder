@@ -3,6 +3,7 @@ package com.udacity.project4.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.util.Log
 import android.view.View
@@ -66,3 +67,11 @@ fun View.fadeOut() {
         }
     })
 }
+fun Fragment.isDeviceLocationEnabled(): Boolean {
+    val locationManager =
+        context?.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+        LocationManager.NETWORK_PROVIDER
+    )
+}
+
