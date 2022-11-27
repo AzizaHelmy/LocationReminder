@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.reminderdetail.ReminderDescriptionFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <!--Data item that holds the reminder details-->
+        <variable
+            name="reminderDataItem"
+            type="com.udacity.project4.ui.reminderlist.ReminderDataItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".locationreminders.ReminderDescriptionActivity">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_title_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_large"
+            android:textSize="@dimen/text_size_large"
+            android:text="@={reminderDataItem.title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Reminder Details" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerColor="@color/black"
+            app:dividerInsetEnd="@dimen/padding_medium"
+            app:dividerInsetStart="@dimen/padding_medium"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_detail" />
+
+        <TextView
+            android:id="@+id/tv_description_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:padding="@dimen/padding_large"
+            android:textSize="@dimen/text_size_large"
+            android:text="@={reminderDataItem.description}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_detail"
+            tools:text="Description Details" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerColor="@color/black"
+            app:dividerInsetEnd="@dimen/padding_medium"
+            app:dividerInsetStart="@dimen/padding_medium"
+            app:layout_constraintTop_toBottomOf="@+id/tv_description_detail" />
+
+        <TextView
+            android:id="@+id/tv_location_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_large"
+            android:textSize="@dimen/text_size_large"
+            android:text="@={reminderDataItem.location}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_description_detail"
+            tools:text="Location Details" />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerColor="@color/black"
+            app:dividerInsetEnd="@dimen/padding_medium"
+            app:dividerInsetStart="@dimen/padding_medium"
+            app:layout_constraintTop_toBottomOf="@+id/tv_location_detail" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

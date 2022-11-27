@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.udacity.project4.ui.savereminder.SaveReminderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +19,8 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/btn_save_location"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:context=".ui.savereminder.selectreminderlocation.SelectLocationFragment" />
@@ -25,9 +29,9 @@
             android:id="@+id/btn_save_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_location"
-            android:padding="@dimen/padding_normal"
             android:layout_margin="@dimen/margin_normal"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/select_location"
             app:layout_constraintBottom_toBottomOf="@+id/map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -5,7 +5,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.udacity.project4.ui.savereminder.SaveReminderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/reminder_title"
+            android:text="@={viewModel.reminderTitle}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,6 +31,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:hint="@string/reminder_desc"
+            android:text="@={viewModel.reminderDescription}"
             android:lines="10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_normal"
+            android:text="@={viewModel.reminderSelectedLocationStr}"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/tv_select_location"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,6 +71,7 @@
             android:src="@drawable/ic_save"
             app:fabSize="normal"
             app:tint="@color/white"
+            android:fadeVisible="@{!viewModel.showLoading.booleanValue()}"
             app:backgroundTint="@color/purple_700"
             app:layout_anchorGravity="bottom|right|end"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -77,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
+            android:fadeVisible="@{viewModel.showLoading.booleanValue()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

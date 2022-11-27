@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
@@ -29,6 +28,7 @@ class ReminderListFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentReminderListBinding.inflate(layoutInflater)
+        binding.viewModel = _viewModel
         return binding.root
     }
 
@@ -38,8 +38,15 @@ class ReminderListFragment : BaseFragment() {
         binding.fabAddReminder.setOnClickListener {
             findNavController().navigate(R.id.addReminderFragment)
         }
-
+        binding.refreshLayout.setOnRefreshListener {
+            _viewModel.loadReminders()
+        }
         setupMenu()
+    }
+    override fun onResume() {
+        super.onResume()
+        //load the reminders list on the ui
+        _viewModel.loadReminders()
     }
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
@@ -48,6 +55,7 @@ class ReminderListFragment : BaseFragment() {
 //        setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
     }
+
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {

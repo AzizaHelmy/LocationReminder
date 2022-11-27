@@ -8,6 +8,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,7 +16,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,16 +26,18 @@ import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.ui.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.isDeviceLocationEnabled
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
+    private var marker: Marker? = null
     private lateinit var binding: FragmentSelectLocationBinding
-    override val _viewModel: SaveReminderViewModel by inject()
+    override val _viewModel: SaveReminderViewModel by viewModel()
     private val locationRequest =
         LocationRequest.Builder(10000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
     private var permissions = arrayOf(
@@ -77,6 +79,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSelectLocationBinding.inflate(layoutInflater)
+        binding.viewModel = _viewModel
+        binding.lifecycleOwner = this
         return binding.root
     }
 
@@ -86,8 +90,18 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         mapFragment?.getMapAsync(this)
         setupMenu()
         enableMyLocation()
+        onLocationSelected()
+    }
+
+    private fun onLocationSelected() {
         binding.btnSaveLocation.setOnClickListener {
-            findNavController().navigate(R.id.addReminderFragment)
+            if (marker == null) {
+                _viewModel.showSnackBar.value =getString(R.string.err_select_location)
+            } else {
+                // findNavController().navigate(R.id.addReminderFragment)
+                _viewModel.navigationCommand.value = NavigationCommand.Back
+            }
+
         }
     }
 
@@ -115,21 +129,35 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 )
                 moveCamera(CameraUpdateFactory.newLatLng(it))
                 clear()
-                addMarker(
-                    MarkerOptions().position(it).title("Marker").snippet(snippets)
+                marker = addMarker(
+                    MarkerOptions().position(it).title( getString(R.string.dropped_pin)).snippet(snippets)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                 )
-                binding.btnSaveLocation.text = getString(R.string.save)
+                updateLocation(it, getString(R.string.dropped_pin))
+//                _viewModel.latitude.value = it.latitude
+//                _viewModel.longitude.value = it.longitude
+//                binding.btnSaveLocation.text =
+                    getString(R.string.save)
             }
             setOnPoiClickListener {
                 clear()
-                addMarker(MarkerOptions().position(it.latLng).title(it.name))?.showInfoWindow()
-                it.latLng.latitude
-                it.latLng.longitude
-                it.name
+                marker =
+                    addMarker(MarkerOptions().position(it.latLng).title(it.name))
+                marker?.showInfoWindow()
+//                _viewModel.latitude.value = it.latLng.latitude
+//                _viewModel.longitude.value = it.latLng.longitude
+//                _viewModel.reminderSelectedLocationStr.value = it.name
+              updateLocation(it.latLng, it.name)
+              //  Log.e("TAG", "onMapReady:${it.name} ", )
                 binding.btnSaveLocation.text = getString(R.string.save)
             }
         }
+    }
+
+    private fun updateLocation(location: LatLng, locationName: String? = null) {
+        _viewModel.latitude.value = location.latitude
+        _viewModel.longitude.value = location.longitude
+        _viewModel.reminderSelectedLocationStr.value = locationName
     }
 
     @SuppressLint("MissingPermission")

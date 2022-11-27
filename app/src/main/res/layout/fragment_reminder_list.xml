@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.udacity.project4.ui.reminderlist.RemindersListViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,6 +24,7 @@
                 android:id="@+id/reminderssRecyclerView"
                 android:layout_width="match_parent"
                 android:visibility="gone"
+                android:liveData="@{viewModel.remindersList}"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/reminder_item"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -35,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/no_data"
+                android:fadeVisible="@{viewModel.showNoData.booleanValue()}"
                 android:drawablePadding="@dimen/padding_large"
                 android:drawableTop="@drawable/nodata"
-                android:visibility="visible"
                 android:textSize="@dimen/text_size_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
+                android:fadeVisible="@{viewModel.showLoading.booleanValue()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

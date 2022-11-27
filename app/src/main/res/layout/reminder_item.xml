@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         app:cardElevation="@dimen/margin_normal"
         app:cardCornerRadius="@dimen/margin_normal"
+        android:fadeVisible="@{true}"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_medium">
 
@@ -30,6 +31,7 @@
                 android:layout_marginStart="@dimen/padding_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_normal"
+                android:text="@{item.title}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
@@ -39,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_small"
+                android:text="@{item.description}"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
                 tools:text="Description" />
@@ -50,6 +53,7 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small"
+                android:text="@{item.location}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_title"

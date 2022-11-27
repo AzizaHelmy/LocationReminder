@@ -1,5 +1,6 @@
 package com.udacity.project4.data.repo
 
+import android.util.Log
 import com.udacity.project4.data.source.ReminderDataSource
 import com.udacity.project4.data.source.local.RemindersDao
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
@@ -38,7 +39,9 @@ class RemindersLocalRepository(
      * @param reminder the reminder to be inserted
      */
     override suspend fun saveReminder(reminder: ReminderDTO) =
+
         withContext(ioDispatcher) {
+            Log.e("TAG", "Repo saveReminder: ", )
             remindersDao.saveReminder(reminder)
         }
 

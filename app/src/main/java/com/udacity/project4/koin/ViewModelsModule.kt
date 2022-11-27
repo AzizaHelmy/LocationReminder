@@ -16,6 +16,6 @@ val viewModelModule = module {
         SaveReminderViewModel(get(), get() as ReminderDataSource)
     }
     viewModel {
-        RemindersListViewModel(get(),get() as ReminderDataSource)
+        RemindersListViewModel(get(), get() as ReminderDataSource)
     }
 }
