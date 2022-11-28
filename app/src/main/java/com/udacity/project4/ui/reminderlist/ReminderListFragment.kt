@@ -2,6 +2,7 @@ package com.udacity.project4.ui.reminderlist
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -34,6 +35,7 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
         setupRecyclerView()
         binding.fabAddReminder.setOnClickListener {
             findNavController().navigate(R.id.addReminderFragment)
@@ -43,11 +45,13 @@ class ReminderListFragment : BaseFragment() {
         }
         setupMenu()
     }
+
     override fun onResume() {
         super.onResume()
         //load the reminders list on the ui
         _viewModel.loadReminders()
     }
+
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
         }

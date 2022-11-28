@@ -30,6 +30,8 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.ui.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.isDeviceLocationEnabled
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -37,7 +39,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var marker: Marker? = null
     private lateinit var binding: FragmentSelectLocationBinding
-    override val _viewModel: SaveReminderViewModel by viewModel()
+    override val _viewModel: SaveReminderViewModel by activityViewModel()
     private val locationRequest =
         LocationRequest.Builder(10000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
     private var permissions = arrayOf(
@@ -98,7 +100,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             if (marker == null) {
                 _viewModel.showSnackBar.value =getString(R.string.err_select_location)
             } else {
-                // findNavController().navigate(R.id.addReminderFragment)
                 _viewModel.navigationCommand.value = NavigationCommand.Back
             }
 
@@ -134,9 +135,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                 )
                 updateLocation(it, getString(R.string.dropped_pin))
-//                _viewModel.latitude.value = it.latitude
-//                _viewModel.longitude.value = it.longitude
-//                binding.btnSaveLocation.text =
+               _viewModel.longitude.value = it.longitude
+                binding.btnSaveLocation.text =
                     getString(R.string.save)
             }
             setOnPoiClickListener {
@@ -144,11 +144,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 marker =
                     addMarker(MarkerOptions().position(it.latLng).title(it.name))
                 marker?.showInfoWindow()
-//                _viewModel.latitude.value = it.latLng.latitude
-//                _viewModel.longitude.value = it.latLng.longitude
-//                _viewModel.reminderSelectedLocationStr.value = it.name
               updateLocation(it.latLng, it.name)
-              //  Log.e("TAG", "onMapReady:${it.name} ", )
                 binding.btnSaveLocation.text = getString(R.string.save)
             }
         }

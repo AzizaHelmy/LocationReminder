@@ -28,6 +28,8 @@ class RemindersLocalRepository(
      */
     override suspend fun getReminders(): Result<List<ReminderDTO>> = withContext(ioDispatcher) {
         return@withContext try {
+            Log.e("TAG", " Repo loadReminders: ", )
+
             Result.Success(remindersDao.getReminders())
         } catch (ex: Exception) {
             Result.Error(ex.localizedMessage)

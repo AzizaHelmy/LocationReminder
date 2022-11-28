@@ -13,7 +13,6 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -29,23 +27,18 @@ import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.ui.reminderlist.ReminderDataItem
 import com.udacity.project4.ui.savereminder.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.utils.isDeviceLocationEnabled
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
-    override val _viewModel: SaveReminderViewModel by sharedViewModel()
+    override val _viewModel: SaveReminderViewModel by activityViewModel()
     private lateinit var binding: FragmentSaveReminderBinding
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var reminderDataItem: ReminderDataItem
-    private val geofenceStartedResult = MutableLiveData<Boolean>(false)
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     private val locationRequest =
         LocationRequest.Builder(10000)
@@ -97,13 +90,6 @@ class SaveReminderFragment : BaseFragment() {
         binding = FragmentSaveReminderBinding.inflate(layoutInflater)
         binding.viewModel = _viewModel
         geofencingClient = LocationServices.getGeofencingClient(requireContext())
-        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) || shouldShowRequestPermissionRationale(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            )
-        ) { // if true = user denied the request 2 times
-           // showAlertDialogForLocationPermission()
-
-        }
         return binding.root
     }
 
@@ -116,17 +102,7 @@ class SaveReminderFragment : BaseFragment() {
         ) { // if true = user denied the request 2 times
            // showAlertDialogForLocationPermission()
         }
-        geofenceStartedResult.observe(viewLifecycleOwner) {
-            if (it) {
-                _viewModel.saveReminder(reminderDataItem)
-//                Log.e("TAG", "Saved!!!${reminderDataItem.description} ", )
-//                Log.e("TAG", "Saved!!!${reminderDataItem.title} ", )
-//                Log.e("TAG", "Saved!!!${reminderDataItem.latitude} ", )
-//                Log.e("TAG", "Saved!!!${reminderDataItem.longitude} ", )
-//                Log.e("TAG", "Saved!!!${reminderDataItem.location} ", )
 
-            }
-        }
         binding.tvSelectLocation.setOnClickListener {
             findNavController().navigate(R.id.selectLocationFragment)
         }
@@ -239,10 +215,10 @@ class SaveReminderFragment : BaseFragment() {
             .addGeofence(geofenceBuilder)
             .build()
         //3-Add the new geofence request with the new geofence
-        geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent).run {
-            addOnSuccessListener {
-                _viewModel.showSnackBarInt.value = R.string.reminder_saved
-                geofenceStartedResult.value = true
+        geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent)
+        .run {
+                addOnSuccessListener {
+                _viewModel.saveReminder(reminderDataItem)
             }
             addOnFailureListener {
                 _viewModel.showSnackBarInt.value = R.string.error_adding_geofence

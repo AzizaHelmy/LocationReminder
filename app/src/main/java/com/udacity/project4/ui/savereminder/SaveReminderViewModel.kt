@@ -11,6 +11,7 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.data.source.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.ui.reminderlist.ReminderDataItem
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 /**
@@ -18,7 +19,11 @@ import kotlinx.coroutines.launch
  */
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
-
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        println(">> TAG: Exception thrown:")
+        exception.printStackTrace()
+        Log.e("TAG", "Exception thrown: $exception.")
+    }
     val reminderTitle = MutableLiveData<String?>()
     val reminderDescription = MutableLiveData<String?>()
     val reminderSelectedLocationStr = MutableLiveData<String?>()
@@ -50,9 +55,9 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      * Save the reminder to the data source
      */
     fun saveReminder(reminderData: ReminderDataItem) {
-        Log.e("TAG", "entered ", )
-       // showLoading.value = true
-        viewModelScope.launch {
+        Log.e("TAG", "Test ", )
+        showLoading.value = true
+        viewModelScope.launch (exceptionHandler){
             Log.e("TAG", "ViewModel saved! ", )
             dataSource.saveReminder(
                 ReminderDTO(

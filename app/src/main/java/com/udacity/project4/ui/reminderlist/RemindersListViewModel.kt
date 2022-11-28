@@ -1,6 +1,7 @@
 package com.udacity.project4.ui.reminderlist
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.project4.base.BaseViewModel
@@ -20,6 +21,9 @@ class RemindersListViewModel(
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
      * or show error if any
      */
+    init {
+        loadReminders()
+    }
     fun loadReminders() {
         showLoading.value = true
         viewModelScope.launch {

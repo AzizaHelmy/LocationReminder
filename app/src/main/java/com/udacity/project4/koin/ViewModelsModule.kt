@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     //Get the view model this time as a single to be shared with the another fragment
-    single {
+    viewModel {
         SaveReminderViewModel(get(), get() as ReminderDataSource)
     }
     viewModel {
