@@ -55,10 +55,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      * Save the reminder to the data source
      */
     fun saveReminder(reminderData: ReminderDataItem) {
-        Log.e("TAG", "Test ", )
         showLoading.value = true
         viewModelScope.launch (exceptionHandler){
-            Log.e("TAG", "ViewModel saved! ", )
             dataSource.saveReminder(
                 ReminderDTO(
                     reminderData.title,
