@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.udacity.project4.R
 import com.udacity.project4.databinding.FragmentReminderDescriptionBinding
 import com.udacity.project4.ui.reminderlist.ReminderDataItem
 
@@ -26,11 +25,19 @@ class ReminderDescriptionFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (requireActivity().intent.hasExtra(EXTRA_ReminderDataItem)) {
+            binding.reminderDataItem =
+                requireActivity().intent.getParcelableExtra<ReminderDataItem>(EXTRA_ReminderDataItem)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentReminderDescriptionBinding.inflate(layoutInflater)
+        binding = FragmentReminderDescriptionBinding.inflate(layoutInflater)
 
         return binding.root
     }

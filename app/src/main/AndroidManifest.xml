@@ -18,7 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocationReminder"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ReminderDescriptionActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -41,6 +47,7 @@
             android:name=".ui.savereminder.geofence.GeofenceBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
