@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -17,4 +18,41 @@ plugins {
     id 'com.android.library' version '7.3.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
+}
+ext {
+    // Sdk and tools
+    // Support library and architecture components support minSdk 14 and above.
+    minSdkVersion = 19
+    targetSdkVersion = 32
+    compileSdkVersion = 32
+
+    // App dependencies
+    androidXVersion = '1.0.0'
+    androidXAnnotations = '1.5.0'
+    androidXLegacySupport = '1.0.0'
+    appCompatVersion = '1.5.1'
+    archLifecycleVersion = '2.5.1'
+    cardVersion = '1.0.0'
+    materialVersion = '1.7.0'
+    fragmentVersion = '1.5.4'
+    recyclerViewVersion = '1.2.1'
+    mockitoVersion = '4.8.1'
+    constraintVersion = '2.1.4'
+    dexMakerVersion = '2.28.3'
+    coroutinesVersion = '1.6.4'
+    navigationVersion = '2.5.3'
+    roomVersion = '2.4.3'
+    koinVersion = '2.2.3'
+    truthVersion = '1.1.3'
+    junitVersion = '4.13.2'
+    androidXTestCoreVersion = '1.4.0'
+    robolectricVersion = '4.9'
+    androidXTestExtKotlinRunnerVersion = '1.1.3'
+    archTestingVersion = '2.1.0'
+    playServicesMapsVersion = '18.1.0'
+    playServicesLocationVersion = '21.0.1'
+    hamcrestVersion = '1.3'
+    androidXTestRulesVersion = '1.4.0'
+    espressoVersion = '3.4.0'
+
 }

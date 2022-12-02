@@ -2,7 +2,6 @@ package com.udacity.project4.ui.reminderlist
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -71,14 +70,14 @@ class ReminderListFragment : BaseFragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                showAlertDialog()
+                showConfirmationDialog()
 
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun showAlertDialog() {
+    private fun showConfirmationDialog() {
         dialog = AlertDialog.Builder(requireContext()).apply {
             setIcon(R.drawable.attention)
             setTitle("Warning!")
