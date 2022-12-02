@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.udacity.project4.BuildConfig
 import com.udacity.project4.R
-import com.udacity.project4.ui.reminderdetail.ReminderDescriptionActivity
 import com.udacity.project4.ui.reminderdetail.ReminderDescriptionFragment
 import com.udacity.project4.ui.reminderlist.ReminderDataItem
 
@@ -33,7 +32,7 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         notificationManager.createNotificationChannel(channel)
     }
 
-    val intent = ReminderDescriptionActivity.newIntent(context.applicationContext, reminderDataItem)
+    val intent = ReminderDescriptionFragment.newIntent(context.applicationContext, reminderDataItem)
 
     //create a pending intent that opens ReminderDescriptionActivity when the user clicks on the notification
     val stackBuilder = TaskStackBuilder.create(context)
