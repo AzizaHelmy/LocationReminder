@@ -3,13 +3,14 @@ package com.udacity.project4
 import android.Manifest
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -22,6 +23,7 @@ import com.udacity.project4.ui.reminderlist.RemindersListViewModel
 import com.udacity.project4.ui.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
+import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -97,24 +99,32 @@ class RemindersActivityTest {// Extended Koin Test - embed autoclose @after meth
 
     @Before
     fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
     @After
     fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
-    //    TODO: add End to End testing to the app
+    //  TODO: add End to End testing to the app
     @Test
-    fun mainActivityTest() {
-        dataBindingIdlingResource.monitorActivity(activityScenarioRule.scenario)
-        onView(withId(R.id.tv_title))
-            .check(ViewAssertions.matches(ViewMatchers.withText("reminder")))
-        onView(withId(R.id.tv_description))
-            .check(ViewAssertions.matches(ViewMatchers.withText("desc")))
-        onView(withId(R.id.tv_location)).check(ViewAssertions.matches(ViewMatchers.withText("location")))
-        onView(withId(R.id.map)).perform(click())
-        onView(withId(R.id.noDataTextView)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+    fun lunchMainActivity_showSnakeBarAndToast() {
+        val scenario=ActivityScenario.launch(MainActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(scenario)
+
+        onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         onView(withId(R.id.fab_add_reminder)).perform(click())
+        onView(withId(R.id.tv_title)).check(matches(withText("Title reminder")))
+        onView(withId(R.id.tv_description)).perform(typeText("I need to buy something"), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.fab_save_reminder)).perform(click())
+        onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(appContext.getString(R.string.select_location))))
+        onView(withId(R.id.tv_select_location)).perform(click())
+        onView(withId(R.id.map)).perform(click())
+        onView(withId(R.id.btn_save_location)).perform(click())
+        onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+        onView(withId(R.id.fab_save_reminder)).perform(click())
+        onView(withText(appContext.getString(R.string.reminder_saved))).inRoot(ToastMatcher()).check(matches(isDisplayed()))
     }
 }

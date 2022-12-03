@@ -5,6 +5,7 @@ import com.udacity.project4.data.source.ReminderDataSource
 import com.udacity.project4.data.source.local.RemindersDao
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
+import com.udacity.project4.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,15 +27,19 @@ class RemindersLocalRepository(
      * Get the reminders list from the local db
      * @return Result the holds a Success with all the reminders or an Error object with the error message
      */
-    override suspend fun getReminders(): Result<List<ReminderDTO>> = withContext(ioDispatcher) {
-        return@withContext try {
-            Log.e("TAG", " Repo loadReminders: ", )
+    override suspend fun getReminders(): Result<List<ReminderDTO>> =
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                return@withContext try {
+                    Log.e("TAG", " Repo loadReminders: ", )
 
-            Result.Success(remindersDao.getReminders())
-        } catch (ex: Exception) {
-            Result.Error(ex.localizedMessage)
+                    Result.Success(remindersDao.getReminders())
+                } catch (ex: Exception) {
+                    Result.Error(ex.localizedMessage)
+                }
+            }
         }
-    }
+
 
     /**
      * Insert a reminder in the db.
@@ -69,8 +74,10 @@ class RemindersLocalRepository(
      * Deletes all the reminders in the db
      */
     override suspend fun deleteAllReminders() {
-        withContext(ioDispatcher) {
-            remindersDao.deleteAllReminders()
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                remindersDao.deleteAllReminders()
+            }
         }
     }
 }
