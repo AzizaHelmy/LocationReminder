@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
@@ -25,10 +26,28 @@ class AuthenticationFragment : Fragment() {
     }
 
     private fun handelAuthResponse(result: FirebaseAuthUIAuthenticationResult?) {
-        if(result?.resultCode== Activity.RESULT_OK){
+        if (result?.resultCode == Activity.RESULT_OK) {
             Toast.makeText(requireContext(), "logged Done", Toast.LENGTH_SHORT).show()
-        }else
+            findNavController().navigate(R.id.reminderListFragment)
+
+        } else
             Toast.makeText(requireContext(), "Failed !!", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().navigate(R.id.authenticationFragment)
+           // requireActivity().finish()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            // already signed in
+            findNavController().navigate(R.id.reminderListFragment)
+        }
     }
 
     override fun onCreateView(
@@ -42,12 +61,7 @@ class AuthenticationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnLogin.setOnClickListener {
-            if (FirebaseAuth.getInstance().currentUser != null) {
-                // already signed in
-                findNavController().navigate(R.id.reminderListFragment)
-            } else {
-                launchSignInFlow()
-            }
+            launchSignInFlow()
         }
     }
 

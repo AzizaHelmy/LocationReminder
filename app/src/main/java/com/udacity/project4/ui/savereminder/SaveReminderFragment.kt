@@ -67,7 +67,7 @@ class SaveReminderFragment : BaseFragment() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true || result[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
                 _viewModel.showToast.value = getString(R.string.location_permission_granted)
-//                startGeofence(reminderDataItem)
+//               startGeofence(reminderDataItem)
             } else
                 _viewModel.showSnackBarInt.value = R.string.location_permission_denied
         }

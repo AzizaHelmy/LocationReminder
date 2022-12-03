@@ -9,13 +9,15 @@
         android:id="@+id/reminderListFragment"
         android:name="com.udacity.project4.ui.reminderlist.ReminderListFragment"
         android:label="Reminder List"
-        tools:layout="@layout/fragment_reminder_list" >
+        tools:layout="@layout/fragment_reminder_list">
         <action
             android:id="@+id/action_reminderListFragment_to_saveReminderFragment"
-            app:destination="@id/addReminderFragment" />
+            app:destination="@id/addReminderFragment"
+           />
         <action
             android:id="@+id/action_reminderListFragment_to_reminderDescriptionFragment"
-            app:destination="@id/reminderDescriptionFragment" />
+            app:destination="@id/reminderDescriptionFragment"
+             />
     </fragment>
     <fragment
         android:id="@+id/selectLocationFragment"
@@ -26,7 +28,7 @@
         android:id="@+id/addReminderFragment"
         android:name="com.udacity.project4.ui.savereminder.SaveReminderFragment"
         android:label="Add Reminder"
-        tools:layout="@layout/fragment_save_reminder" >
+        tools:layout="@layout/fragment_save_reminder">
         <action
             android:id="@+id/action_saveReminderFragment_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment" />
@@ -35,10 +37,11 @@
         android:id="@+id/authenticationFragment"
         android:name="com.udacity.project4.ui.authentication.AuthenticationFragment"
         android:label="Authentication"
-        tools:layout="@layout/fragment_authentication" >
+        tools:layout="@layout/fragment_authentication">
         <action
             android:id="@+id/action_authenticationFragment_to_reminderListFragment"
-            app:destination="@id/reminderListFragment" />
+            app:destination="@id/reminderListFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/reminderDescriptionFragment"
