@@ -3,6 +3,7 @@ package com.udacity.project4.ui.reminderlist
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -21,6 +22,10 @@ class ReminderListFragment : BaseFragment() {
     override val _viewModel: RemindersListViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+             requireActivity().finish()
+        }
     }
 
     override fun onCreateView(

@@ -36,10 +36,6 @@ class AuthenticationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(R.id.authenticationFragment)
-           // requireActivity().finish()
-        }
     }
 
     override fun onStart() {
@@ -68,8 +64,7 @@ class AuthenticationFragment : Fragment() {
     private fun launchSignInFlow() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build()
-        )
+            AuthUI.IdpConfig.GoogleBuilder().build())
 
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()

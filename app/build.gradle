@@ -70,7 +70,6 @@ dependencies {
     kapt "androidx.room:room-compiler:2.4.3"
     implementation "androidx.room:room-ktx:2.4.3"
     // Coroutines
-    //implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     // Koin main features for Android
     implementation "io.insert-koin:koin-android:3.3.0"
@@ -102,11 +101,6 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
     androidTestImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     androidTestImplementation "org.robolectric:annotations:$robolectricVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
-//    androidTestImplementation "junit:junit:$junitVersion"
     // Once https://issuetracker.google.com/127986458 is fixed this can be testImplementation
     debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"

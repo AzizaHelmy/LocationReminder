@@ -25,15 +25,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         get() = Dispatchers.IO + coroutineJob
 
     override fun onReceive(context: Context, intent: Intent) {
-
+        Log.e("TAG", "1-onReceive: ", )
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
         if (geofencingEvent!!.hasError()) {
             val errorMessage = GeofenceStatusCodes
                 .getStatusCodeString(geofencingEvent.errorCode)
-            Log.e("TAG", errorMessage)
+            Log.e("TAG", "err$errorMessage")
             return
         }
+        Log.e("TAG", "2-onReceive: ", )
         // Get the transition type.
         val geofenceTransition = geofencingEvent.geofenceTransition
         // Test that the reported transition was of interest.
@@ -43,6 +44,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
             val triggeringGeofence = geofencingEvent.triggeringGeofences
+            Log.e("TAG", "onReceive: ", )
             // Get the transition details as a String.
             triggeringGeofence?.forEach {
                 sendReminderNotification(context, it.requestId)

@@ -13,6 +13,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +66,8 @@ class SaveReminderFragment : BaseFragment() {
     }
     private val locationPermissionResultRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true || result[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
+            if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true  || result[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
+               //&&result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
                 _viewModel.showToast.value = getString(R.string.location_permission_granted)
                startGeofence(reminderDataItem)
             } else
@@ -144,6 +146,9 @@ class SaveReminderFragment : BaseFragment() {
         val foregroundPermissionApproved = ActivityCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED ||ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
         val backgroundPermissionApproved = if (runningQOrLater) {
@@ -218,12 +223,13 @@ class SaveReminderFragment : BaseFragment() {
         //3-Add the new geofence request with the new geofence
         geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent)
         .run {
-              //  addOnSuccessListener {
+               addOnSuccessListener {
                 _viewModel.saveReminder(reminderDataItem)
-//            }
-//            addOnFailureListener {
-//                _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
-//            }
+           }
+            addOnFailureListener {
+                Log.e("TAG", "startGeofence:${it.stackTrace} ", )
+                _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
+            }
         }
 
     }

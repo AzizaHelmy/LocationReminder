@@ -195,7 +195,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getMyCurrentLocation() {
-        mMap.isMyLocationEnabled = true
+        if (::mMap.isInitialized){
+            mMap.isMyLocationEnabled = true
+        }
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val currentLocationRequest =
             CurrentLocationRequest.Builder().setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
