@@ -8,7 +8,8 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -34,14 +35,14 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.test.junit5.AutoCloseKoinTest
 import org.koin.test.get
+import org.koin.test.junit5.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 //END TO END test to black box test the app
 class RemindersActivityTest: AutoCloseKoinTest() {// Extended Koin Test - embed autoclose @after method to close Koin after every test
-//: AutoCloseKoinTest()
+
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
@@ -115,17 +116,15 @@ class RemindersActivityTest: AutoCloseKoinTest() {// Extended Koin Test - embed 
         val scenario=ActivityScenario.launch(MainActivity::class.java)
         dataBindingIdlingResource.monitorActivity(scenario)
 
-//        onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        onView(withId(R.id.fab_add_reminder)).perform(click())
-//        onView(withId(R.id.tv_title)).check(matches(withText("Title reminder")))
-//        onView(withId(R.id.tv_description)).perform(typeText("I need to buy something"), ViewActions.closeSoftKeyboard())
-//        onView(withId(R.id.fab_save_reminder)).perform(click())
-//       // onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(appContext.getString(R.string.select_location))))
-//        onView(withId(R.id.tv_select_location)).perform(click())
-//        onView(withId(R.id.map)).perform(click())
-//        onView(withId(R.id.btn_save_location)).perform(click())
-//        onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-//        onView(withId(R.id.fab_save_reminder)).perform(click())
-       // onView(withText(appContext.getString(R.string.reminder_saved))).inRoot(ToastMatcher()).check(matches(isDisplayed()))
+        onView(withId(R.id.fab_add_reminder)).perform(click())
+        onView(withId(R.id.reminderTitle)).perform(typeText("Buying"))
+        onView(withId(R.id.reminderDescription)).perform(typeText("I need to buy something from this place"), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.fab_save_reminder)).perform(click())
+        onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(appContext.getString(R.string.no_data))))
+        onView(withId(R.id.tv_select_location)).perform(click())
+        onView(withId(R.id.map)).perform(click())
+        onView(withId(R.id.btn_save_location)).perform(click())
+        onView(withId(R.id.fab_save_reminder)).perform(click())
+        onView(withText(appContext.getString(R.string.reminder_saved))).inRoot(ToastMatcher()).check(matches(isDisplayed()))
     }
 }
