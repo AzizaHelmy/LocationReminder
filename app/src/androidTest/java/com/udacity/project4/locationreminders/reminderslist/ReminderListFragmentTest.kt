@@ -27,6 +27,7 @@ import com.udacity.project4.ui.reminderlist.RemindersListViewModel
 import com.udacity.project4.ui.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorFragment
+import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -39,6 +40,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.get
+import org.koin.test.junit5.AutoCloseKoinTest
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
@@ -47,7 +49,7 @@ import org.mockito.Mockito.verify
 @ExperimentalCoroutinesApi
 //UI Testing
 @MediumTest
-class ReminderListFragmentTest {
+class ReminderListFragmentTest : AutoCloseKoinTest() {
     private lateinit var repo: ReminderDataSource
     private lateinit var appContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
@@ -60,7 +62,8 @@ class ReminderListFragmentTest {
     var grantePermissionRule = GrantPermissionRule.grant(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+    )
 
     /**
      * As we use Koin as a Service Locator Library to develop our code, we'll also use Koin to test our code.
@@ -98,12 +101,14 @@ class ReminderListFragmentTest {
             repo.deleteAllReminders()
         }
     }
+
     /**
      * Idling resources tell Espresso that the app is idle or busy. This is needed when operations
      * are not scheduled in the main Looper (for example when executed on a different thread).
      */
     @Before
     fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
@@ -112,15 +117,16 @@ class ReminderListFragmentTest {
      */
     @After
     fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
+
     // TODO: test the navigation of the fragments.
     @Test
     fun loadReminders_navigate() {
-        val scenario = launchFragmentInContainer<ReminderListFragment>(
-            Bundle(),
-            R.style.Theme_LocationReminder
-        )
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.Theme_LocationReminder)
+        dataBindingIdlingResource.monitorFragment(scenario)
+
         val navController = mock(NavController::class.java)
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
@@ -128,12 +134,12 @@ class ReminderListFragmentTest {
         // WHEN - Click on the first list item
         onView(withId(R.id.fab_add_reminder)).perform(click())
         // THEN - Verify that we navigate to the first reminder screen
-        verify(navController).navigate(ReminderListFragmentDirections.actionReminderListFragmentToSaveReminderFragment())
+        verify(navController).navigate(ReminderListFragmentDirections.toSaveReminderFragment())
     }
 
     //TODO: test the displayed data on the UI.
     @Test
-    fun loadReminders_displayRemindersInUi() = runBlocking {
+    fun loadReminders_displayRemindersInUi(): Unit = runBlocking {
         //GIVEN saving a reminder
         val fakeReminder = ReminderDTO("reminder", "desc", "location", 100.00, 100.00, "1")
         repo.saveReminder(fakeReminder)

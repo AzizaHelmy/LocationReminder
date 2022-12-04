@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentReminderListBinding
 import com.udacity.project4.utils.setup
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,7 +43,7 @@ class ReminderListFragment : BaseFragment() {
         binding.lifecycleOwner = this
         setupRecyclerView()
         binding.fabAddReminder.setOnClickListener {
-            findNavController().navigate(R.id.addReminderFragment)
+            _viewModel.navigationCommand.value=NavigationCommand.To(ReminderListFragmentDirections.toSaveReminderFragment())
         }
         binding.refreshLayout.setOnRefreshListener {
             _viewModel.loadReminders()

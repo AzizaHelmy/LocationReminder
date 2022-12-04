@@ -11,8 +11,8 @@
         android:label="Reminder List"
         tools:layout="@layout/fragment_reminder_list">
         <action
-            android:id="@+id/action_reminderListFragment_to_saveReminderFragment"
-            app:destination="@id/addReminderFragment"
+            android:id="@+id/to_saveReminderFragment"
+            app:destination="@id/saveReminderFragment"
            />
     </fragment>
     <fragment
@@ -21,7 +21,7 @@
         android:label="Select Location"
         tools:layout="@layout/fragment_select_location" />
     <fragment
-        android:id="@+id/addReminderFragment"
+        android:id="@+id/saveReminderFragment"
         android:name="com.udacity.project4.ui.savereminder.SaveReminderFragment"
         android:label="Add Reminder"
         tools:layout="@layout/fragment_save_reminder">
