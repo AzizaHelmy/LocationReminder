@@ -217,12 +217,12 @@ class SaveReminderFragment : BaseFragment() {
         //3-Add the new geofence request with the new geofence
         geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent)
         .run {
-                addOnSuccessListener {
+              //  addOnSuccessListener {
                 _viewModel.saveReminder(reminderDataItem)
-            }
-            addOnFailureListener {
-                _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
-            }
+//            }
+//            addOnFailureListener {
+//                _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
+//            }
         }
 
     }

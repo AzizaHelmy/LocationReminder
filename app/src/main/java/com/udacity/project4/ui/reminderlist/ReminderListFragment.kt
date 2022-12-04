@@ -70,8 +70,9 @@ class ReminderListFragment : BaseFragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                showConfirmationDialog()
-
+                if (menuItem.itemId == R.id.authenticationFragment) {
+                    showConfirmationDialog()
+                }
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)

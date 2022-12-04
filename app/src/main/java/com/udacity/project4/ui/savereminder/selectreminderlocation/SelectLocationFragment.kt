@@ -64,7 +64,15 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 _viewModel.showErrorMessage.value =
                     getString(R.string.deny_to_open_location)
         }
-
+   val  locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult?: return
+            for (location in locationResult.locations){
+                // Update UI with location data
+                // ...
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -211,7 +219,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private fun setMyLocationOnMap(currentLocation: Task<Location>) {
         currentLocation.addOnCompleteListener {
             mMap.apply {
-                isMyLocationEnabled = true
+//                isMyLocationEnabled = true
                 val myLocation = LatLng(it.result.latitude, it.result.longitude)
                 addGroundOverlay(
                     GroundOverlayOptions().position(myLocation, 100f)
