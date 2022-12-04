@@ -138,6 +138,7 @@ class SaveReminderFragment : BaseFragment() {
         }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun isForegroundAndBackgroundPermissionGranted(): Boolean {
         val foregroundPermissionApproved = ActivityCompat.checkSelfPermission(

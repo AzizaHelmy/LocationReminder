@@ -8,6 +8,8 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,9 +41,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override val _viewModel: SaveReminderViewModel by activityViewModel()
     private val locationRequest =
         LocationRequest.Builder(10000).setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .setMinUpdateIntervalMillis(100)
-            .setMaxUpdates(1)
-            .build()
+            .setMinUpdateIntervalMillis(100).setMaxUpdates(1).build()
     private var permissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
     )
@@ -50,8 +50,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true || result[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 _viewModel.showToast.value = getString(R.string.location_permission_granted)
                 getMyCurrentLocation()
-            } else
-                _viewModel.showSnackBarInt.value = R.string.location_permission_denied
+            } else _viewModel.showSnackBarInt.value = R.string.location_permission_denied
 
         }
 
@@ -60,19 +59,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 getMyCurrentLocation()
-            } else
-                _viewModel.showErrorMessage.value =
-                    getString(R.string.deny_to_open_location)
+            } else _viewModel.showErrorMessage.value = getString(R.string.deny_to_open_location)
         }
-   val  locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            locationResult?: return
-            for (location in locationResult.locations){
-                // Update UI with location data
-                // ...
-            }
-        }
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -132,7 +121,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         googleMap.apply {
             setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map))
             mapType = GoogleMap.MAP_TYPE_NORMAL
-            isMyLocationEnabled = true
             setOnMapClickListener {
                 var snippets = String.format(
                     Locale.getDefault(), "Lat: %1$.5f, Long: %2$.5f", it.latitude, it.longitude
@@ -146,13 +134,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 )
                 updateLocation(it, getString(R.string.dropped_pin))
                 _viewModel.longitude.value = it.longitude
-                binding.btnSaveLocation.text =
-                    getString(R.string.save)
+                binding.btnSaveLocation.text = getString(R.string.save)
             }
             setOnPoiClickListener {
                 clear()
-                marker =
-                    addMarker(MarkerOptions().position(it.latLng).title(it.name))
+                marker = addMarker(MarkerOptions().position(it.latLng).title(it.name))
                 marker?.showInfoWindow()
                 updateLocation(it.latLng, it.name)
                 binding.btnSaveLocation.text = getString(R.string.save)
@@ -169,8 +155,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
+            Log.e("TAG", "PermissionGranted: ")
             if (isDeviceLocationEnabled()) {
-                getMyCurrentLocation()
+                 getMyCurrentLocation()
             } else {
                 enableDeviceLocation()
             }
@@ -187,7 +174,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             // All location settings are satisfied. The client can initialize
             // location requests here.
             // ...
-            // getMyCurrentLocation()
+            getMyCurrentLocation()
         }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
@@ -208,18 +195,51 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getMyCurrentLocation() {
+        mMap.isMyLocationEnabled = true
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val currentLocationRequest =
             CurrentLocationRequest.Builder().setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
         val currentLocation = fusedLocationClient.getCurrentLocation(currentLocationRequest, null)
-        setMyLocationOnMap(currentLocation)
+        currentLocation.addOnCompleteListener {
+            if (it.isSuccessful) {
+                mMap.isMyLocationEnabled = true
+                val myCurrentLocation = it.result
+                if (myCurrentLocation != null) {
+                    setMyLocationOnMap(currentLocation)
+
+                } else {
+                    val locationCallback = object : LocationCallback() {
+                        override fun onLocationResult(locationResult: LocationResult) {
+                            val locationResult = locationResult.lastLocation
+                            if (locationResult != null) {
+                                val myLocation =
+                                    LatLng(locationResult.latitude, locationResult.longitude)
+                                mMap.animateCamera(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                        myLocation, 18f
+                                    )
+                                )
+
+                            } else {
+                                Log.e("TAG", "faild to get your current location ")
+                            }
+                        }
+                    }
+                    fusedLocationClient.requestLocationUpdates(
+                        locationRequest, locationCallback, Looper.myLooper()
+                    )
+                }
+            } else {
+                mMap.isMyLocationEnabled = false
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")
     private fun setMyLocationOnMap(currentLocation: Task<Location>) {
         currentLocation.addOnCompleteListener {
             mMap.apply {
-//                isMyLocationEnabled = true
                 val myLocation = LatLng(it.result.latitude, it.result.longitude)
                 addGroundOverlay(
                     GroundOverlayOptions().position(myLocation, 100f)
