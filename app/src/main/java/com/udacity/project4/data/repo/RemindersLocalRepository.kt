@@ -46,11 +46,13 @@ class RemindersLocalRepository(
      * @param reminder the reminder to be inserted
      */
     override suspend fun saveReminder(reminder: ReminderDTO) =
-
-        withContext(ioDispatcher) {
-            Log.e("TAG", "Repo saveReminder: ", )
-            remindersDao.saveReminder(reminder)
+        wrapEspressoIdlingResource{
+            withContext(ioDispatcher) {
+                Log.e("TAG", "Repo saveReminder: ", )
+                remindersDao.saveReminder(reminder)
+            }
         }
+    
 
     /**
      * Get a reminder by its id

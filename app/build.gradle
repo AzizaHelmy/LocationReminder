@@ -110,9 +110,10 @@ dependencies {
     implementation "androidx.fragment:fragment:$fragmentVersion"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
-    androidTestImplementation("io.insert.koin:koin-test:$koinVersion") { exclude group: 'org.mockito' }
+    //androidTestImplementation("io.insert.koin:koin-test:$koinVersion") { exclude group: 'org.mockito' }
    // androidTestImplementation('org.koin:koin-test:2.0.1') { exclude group: 'org.mockito' }
-
+    androidTestImplementation "io.insert-koin:koin-core:3.2.2"
+    androidTestImplementation('io.insert-koin:koin-test:3.2.2') { exclude group: 'org.mockito' }
 
 
 }
