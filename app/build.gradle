@@ -71,8 +71,7 @@ dependencies {
     // Koin main features for Android
     implementation "io.insert-koin:koin-android:3.3.0"
     implementation "io.insert-koin:koin-core:3.2.2"
-//    implementation "org.koin:koin-android:$koinVersion"
-//    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+
     //FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     // lottie
@@ -110,10 +109,9 @@ dependencies {
     implementation "androidx.fragment:fragment:$fragmentVersion"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
-    //androidTestImplementation("io.insert.koin:koin-test:$koinVersion") { exclude group: 'org.mockito' }
-   // androidTestImplementation('org.koin:koin-test:2.0.1') { exclude group: 'org.mockito' }
+   //for koin
     androidTestImplementation "io.insert-koin:koin-core:3.2.2"
-    androidTestImplementation('io.insert-koin:koin-test:3.2.2') { exclude group: 'org.mockito' }
-
+    androidTestImplementation "io.insert-koin:koin-test:$koinVersion"
+    androidTestImplementation "io.insert-koin:koin-test-junit5:3.2.2"
 
 }

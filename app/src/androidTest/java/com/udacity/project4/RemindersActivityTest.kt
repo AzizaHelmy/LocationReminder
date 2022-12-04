@@ -34,13 +34,14 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-
+import org.koin.test.junit5.AutoCloseKoinTest
+import org.koin.test.get
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 //END TO END test to black box test the app
 class RemindersActivityTest: AutoCloseKoinTest() {// Extended Koin Test - embed autoclose @after method to close Koin after every test
-
+//: AutoCloseKoinTest()
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
     private val dataBindingIdlingResource = DataBindingIdlingResource()
@@ -89,7 +90,7 @@ class RemindersActivityTest: AutoCloseKoinTest() {// Extended Koin Test - embed 
             modules(listOf(myModule))
         }
         //Get our real repository
-        // repository = get()
+        repository = get()
 
         //clear the data to start fresh
         runBlocking {
