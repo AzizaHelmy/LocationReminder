@@ -66,19 +66,19 @@ class SaveReminderFragment : BaseFragment() {
     }
     private val locationPermissionResultRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true  || result[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
-               //&&result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true && result[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
+                //&&result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
                 _viewModel.showToast.value = getString(R.string.location_permission_granted)
-               startGeofence(reminderDataItem)
+                enableDeviceLocationAndStartGeo()
             } else
-                _viewModel.showSnackBarInt.value = R.string.location_permission_denied
+                _viewModel.showSnackBarInt.value = R.string.background_location_permission_granted
         }
 
     @SuppressLint("SuspiciousIndentation")
     private val locationSettingPermissionResultRequest =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-//TODO
+                enableDeviceLocationAndStartGeo()
             } else
                 _viewModel.showErrorMessage.value =
                     getString(R.string.deny_to_open_location)
@@ -102,7 +102,7 @@ class SaveReminderFragment : BaseFragment() {
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             )
         ) { // if true = user denied the request 2 times
-           // showAlertDialogForLocationPermission()
+            // showAlertDialogForLocationPermission()
         }
 
         binding.tvSelectLocation.setOnClickListener {
@@ -114,11 +114,13 @@ class SaveReminderFragment : BaseFragment() {
             val location = _viewModel.reminderSelectedLocationStr.value
             val latitude = _viewModel.latitude.value
             val longitude = _viewModel.longitude.value
-            reminderDataItem= ReminderDataItem( title,
+            reminderDataItem = ReminderDataItem(
+                title,
                 description,
                 location,
                 latitude,
-                longitude)
+                longitude
+            )
             if (_viewModel.validateEnteredData(reminderDataItem)) {
                 requestPermissionsAndAddGeofence()
             } else {
@@ -133,7 +135,7 @@ class SaveReminderFragment : BaseFragment() {
             if (isDeviceLocationEnabled()) {
                 startGeofence(reminderDataItem)
             } else {
-                enableDeviceLocation()
+                enableDeviceLocationAndStartGeo()
             }
         } else {
             requestForegroundAndBackgroundPermissions()
@@ -146,7 +148,7 @@ class SaveReminderFragment : BaseFragment() {
         val foregroundPermissionApproved = ActivityCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED ||ActivityCompat.checkSelfPermission(
+        ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
@@ -182,7 +184,7 @@ class SaveReminderFragment : BaseFragment() {
         }.show()
     }
 
-    private fun enableDeviceLocation() {
+    private fun enableDeviceLocationAndStartGeo() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(requireActivity())
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
@@ -196,8 +198,10 @@ class SaveReminderFragment : BaseFragment() {
                         IntentSenderRequest.Builder(exception.resolution.intentSender).build()
                     )
                 } catch (sendEx: IntentSender.SendIntentException) {
-                    // Ignore the error.
+                    Log.e("TAG", "error getting location settings ")
                 }
+            } else {
+                _viewModel.showSnackBarInt.value = R.string.reminder_failed
             }
         }
     }
@@ -222,15 +226,15 @@ class SaveReminderFragment : BaseFragment() {
             .build()
         //3-Add the new geofence request with the new geofence
         geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent)
-        .run {
-               addOnSuccessListener {
-                _viewModel.saveReminder(reminderDataItem)
-           }
-            addOnFailureListener {
-                Log.e("TAG", "startGeofence:${it.stackTrace} ", )
-                _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
+            .run {
+                addOnSuccessListener {
+                    _viewModel.saveReminder(reminderDataItem)
+                }
+                addOnFailureListener {
+                    Log.e("TAG", "startGeofence:${it} ")
+                    _viewModel.showSnackBarInt.value = R.string.error_adding_geofence
+                }
             }
-        }
 
     }
 

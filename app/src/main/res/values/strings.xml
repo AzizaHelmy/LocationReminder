@@ -46,4 +46,7 @@
     <string name="location_permission_denied">Location Permission Denied</string>
     <string name="location_permission_granted">Location Permission Granted</string>
     <string name="deny_to_open_location">Denied to open location</string>
+    <string name="reminder_failed">reminder failed!</string>
+    <string name="background_location_permission_granted">background location permission granted</string>
+    <string name="forground_location_permission_denied">forground location permission denied</string>
 </resources>
