@@ -68,7 +68,7 @@ class RemindersLocalRepositoryTest {
             //WHEN getting the reminders by another id
             val reminder = reminderLocalRepo.getReminder("7")
             //THEN will return error
-            assertThat(reminder, `is`(Result.Error("Reminder Not Found!")))
+            assertThat(reminder, `is`(Result.Error("Reminder not found!")))
         }
     }
 }
